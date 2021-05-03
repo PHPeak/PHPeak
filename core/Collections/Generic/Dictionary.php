@@ -47,6 +47,8 @@ final class Dictionary extends Generic implements ICollection
 	}
 
 	/**
+	 * Get the value with the specified key or null
+	 *
 	 * @param $key
 	 * @return KeyValuePair|null
 	 */
@@ -54,6 +56,17 @@ final class Dictionary extends Generic implements ICollection
 	{
 		$filtered = array_filter($this->items, fn($x) => $x->key === $key);
 		return array_shift($filtered) ?? null;
+	}
+
+	/**
+	 * Get the value at the specified index or null
+	 *
+	 * @param int $index
+	 * @return KeyValuePair|null
+	 */
+	public function getAt(int $index): ?KeyValuePair
+	{
+		return $this->items[$index] ?? null;
 	}
 
 	/**

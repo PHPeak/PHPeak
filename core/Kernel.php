@@ -10,11 +10,15 @@ class Kernel
 	public function __construct()
 	{
 		$this->registerAutoloader();
+//TODO		$this->loadConfig();
 	}
 
-	public function request(): string
+	public function handleRequest(): string
 	{
 		$request = new Request();
+
+		var_dump($request);
+		var_dump($_GET);
 
 		return '';
 	}
@@ -23,7 +27,7 @@ class Kernel
 	{
 		//TODO fix this
 		spl_autoload_register(function ($class) {
-			$file = sprintf('../src%s', str_replace([__NAMESPACE__, '\\'], ['', DIRECTORY_SEPARATOR], $class).'.php');
+			$file = sprintf('../core%s', str_replace([__NAMESPACE__, '\\'], ['', DIRECTORY_SEPARATOR], $class).'.php');
 
 			if (file_exists($file)) {
 				require_once($file);

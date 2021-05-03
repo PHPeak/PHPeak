@@ -81,6 +81,9 @@ abstract class Generic implements Iterator
 
 	protected function setKeyType($keyType): void
 	{
+		//TODO generic support with type hinting?
+		//TODO array support
+
 		if(substr($keyType, 0, 1) === '?') {
 			throw new InvalidArgumentException("Key may not be nullable");
 		}
@@ -101,9 +104,11 @@ abstract class Generic implements Iterator
 
 		throw new InvalidArgumentException(sprintf("Expected value to be of type '%s' but got '%s'", $dicType, $type));
 	}
-	private function isValidType($variable, $type): bool
+	private function isValidType($variable, string $type): bool
 	{
-		if(is_scalar($variable)) {
+		if($type === 'any') {
+			$isValid = true;
+		} else if(is_scalar($variable)) {
 			//all scalars have a function like is_string, is_int...
 			$isMethod = 'is_' . ucfirst($type);
 			$isValid = (function_exists($isMethod)) && $isMethod($variable);

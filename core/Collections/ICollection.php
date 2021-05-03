@@ -15,4 +15,6 @@ interface ICollection
 
 	public function get($key);
 
+	public function getAt(int $index);
+
 }

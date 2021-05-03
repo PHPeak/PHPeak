@@ -1,5 +1,6 @@
 # Upcoming features
 # Core
+- Cache
 - Kernel
 - Responses (JSONResponse/TextResponse/StreamResponse)
 - Controllers

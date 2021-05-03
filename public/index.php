@@ -1,7 +1,7 @@
 <?php
 
-require_once(__DIR__ . '/../src/Kernel.php');
+require_once(__DIR__ . '/../core/Kernel.php');
 
 use PHPeak\Kernel;
 
-echo (new Kernel())->request();
+echo (new Kernel())->handleRequest();
