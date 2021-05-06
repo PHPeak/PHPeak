@@ -2,6 +2,7 @@
 
 namespace PHPeak;
 
+use PHPeak\Autoloader\ClassLoader;
 use PHPeak\HTTP\Request;
 
 class Kernel
@@ -16,6 +17,9 @@ class Kernel
 	public function handleRequest(): string
 	{
 		$request = new Request();
+
+		ClassLoader::loadServices();
+
 
 		var_dump($request);
 		var_dump($_GET);

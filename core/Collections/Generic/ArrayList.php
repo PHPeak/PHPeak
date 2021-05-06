@@ -11,7 +11,7 @@ use PHPeak\Collections\KeyValuePair;
  * @package PHPeak\Collections\Generic
  * @property KeyValuePair[] $items
  */
-final class ArrayList extends Generic implements IList
+final class ArrayList extends Generic // implements IList
 {
 
 	/**
