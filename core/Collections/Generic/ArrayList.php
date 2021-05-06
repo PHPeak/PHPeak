@@ -11,29 +11,23 @@ use PHPeak\Collections\KeyValuePair;
  * @package PHPeak\Collections\Generic
  * @property KeyValuePair[] $items
  */
-final class Dictionary extends Generic implements ICollection
+final class ArrayList extends Generic implements IList
 {
 
 	/**
-	 * Dictionary constructor.
+	 * List constructor.
 	 *
-	 * @param string $keyType
 	 * @param string $valueType
 	 */
 	public function __construct(
-		string $keyType, //not nullable
 		string $valueType //nullable
 	) {
-		$this->setKeyType($keyType);
 		$this->setValueType($valueType);
 	}
 
-	public function add(mixed $key, mixed $value): int
+	public function add(mixed $value): int
 	{
-		$keyValuePair = new KeyValuePair($key, $value);
-
-		$this->validateKeyValuePair($keyValuePair);
-		$this->items[] = $keyValuePair;
+		$this->items[] = $value;
 
 		return count($this->items) - 1;
 	}
@@ -43,9 +37,9 @@ final class Dictionary extends Generic implements ICollection
 		// TODO: Implement remove() method.
 	}
 
-	public function removeAt(int $index): void
+	public function removeAt($index): void
 	{
-		array_splice($this->items, $index, 1);
+		// TODO: Implement removeAt() method.
 	}
 
 	/**
@@ -80,5 +74,9 @@ final class Dictionary extends Generic implements ICollection
 		}
 	}
 
+	public function contains($value)
+	{
+		// TODO: Implement contains() method.
+	}
 
 }
