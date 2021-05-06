@@ -32,23 +32,30 @@ final class ArrayList extends Generic implements IList
 		return count($this->items) - 1;
 	}
 
-	public function remove($key): void
+  /**
+   * Remove the element with the given value
+   *
+   * @param $value
+   */
+	public function remove(mixed $value): void
 	{
-		// TODO: Implement remove() method.
+		$this->validateValueType($value);
+
+		$this->items = array_filter($this->items, fn($item) => $item !== $value);
 	}
 
-	public function removeAt($index): void
+	public function removeAt(int $index): void
 	{
-		// TODO: Implement removeAt() method.
+    unset($this->items[$index]);
 	}
 
 	/**
 	 * Get the value with the specified key or null
 	 *
-	 * @param $key
+	 * @param mixed $key
 	 * @return KeyValuePair|null
 	 */
-	public function get($key): ?KeyValuePair
+	public function get(mixed $key): ?KeyValuePair
 	{
 		$filtered = array_filter($this->items, fn($x) => $x->key === $key);
 		return array_shift($filtered) ?? null;

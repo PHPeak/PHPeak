@@ -11,7 +11,7 @@ use PHPeak\Collections\KeyValuePair;
  * @package PHPeak\Collections\Generic
  * @property KeyValuePair[] $items
  */
-final class Dictionary extends Generic implements ICollection
+final class Dictionary extends Generic implements IDictionary
 {
 
 	/**

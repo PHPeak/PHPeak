@@ -20,14 +20,6 @@ interface ICollection
 	public function removeAt(int $index): void;
 
 	/**
-	 * Get the element with the given key
-	 *
-	 * @param mixed $key
-	 * @return mixed The value at the index or null
-	 */
-	public function get(mixed $key): mixed;
-
-	/**
 	 * Get the element at the given index
 	 *
 	 * @param int $index
@@ -52,4 +44,14 @@ interface ICollection
 	 */
 	public function contains(mixed $value): bool;
 
+	public function sort(callable $fn = null): self;
+
+	public function find(callable $fn = null): mixed;
+
+	public function findAll(callable $fn = null): mixed;
+
+	public function copy(): self;
+
+	//TODO findAll (callback)
+	//TODO copy
 }
