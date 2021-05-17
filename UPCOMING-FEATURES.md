@@ -28,6 +28,8 @@
 - QRCode library, mostly for use with 2FA
 - Localization (i18n)
 - Automated class generation
+- Service workers
+  - With that custom outage pages
 
 # Could have
 - Annotation support
