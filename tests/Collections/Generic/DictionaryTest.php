@@ -1,7 +1,10 @@
 <?php
 
 use PHPeak\Collections\Generic\Dictionary;
+use PHPeak\Collections\KeyValuePair;
+use PHPeak\Exceptions\DuplicateKeyException;
 use PHPeak\Exceptions\InvalidArgumentException ;
+use PHPeak\Exceptions\InvalidKeyException;
 use PHPUnit\Framework\Testcase;
 
 class DictionaryTest extends Testcase
@@ -13,6 +16,21 @@ class DictionaryTest extends Testcase
 			Dictionary::class,
 			new Dictionary('string', 'string')
 		);
+	}
+
+	public function testDeniesDuplicateKeys(): void
+	{
+		//arrange
+		$dictionary = new Dictionary('string', 'string');
+		$key = 'test';
+		$value = '123';
+
+		//act
+		$dictionary->add($key, $value);
+
+		//assert
+		$this->expectException(DuplicateKeyException::class);
+		$dictionary->add($key, $value);
 	}
 
 	public function testCanSupportScalar(): void
@@ -76,5 +94,141 @@ class DictionaryTest extends Testcase
 		//act
 		$this->expectException(InvalidArgumentException::class);
 		$dictionary->add($key, $value);
+	}
+
+	public function testGetAt(): void
+	{
+		//arrange
+		$dictionary = new Dictionary('string', 'string');
+		$key = 'test';
+		$value = '123';
+
+		//act
+		$index = $dictionary->add($key, $value);
+
+		//assert
+		$this->assertInstanceOf(KeyValuePair::class, $dictionary->getAt($index));
+		$this->assertNull($dictionary->getAt(10));
+	}
+
+	public function testGet(): void
+	{
+		//arrange
+		$dictionary = new Dictionary('string', 'string');
+		$key = 'test';
+		$value = '123';
+
+		//act
+		$dictionary->add($key, $value);
+
+		//assert
+		$this->assertInstanceOf(KeyValuePair::class, $dictionary->get($key));
+		$this->expectException(InvalidKeyException::class);
+		$dictionary->get($key . 'asd');
+	}
+
+	public function testAssertKeyExists(): void
+	{
+		//arrange
+		$dictionary = new Dictionary('string', 'string');
+		$key = 'test';
+		$value = '123';
+
+		//act
+		$dictionary->add($key, $value);
+
+		//assert
+		$this->assertTrue($dictionary->keyExists($key));
+		$this->assertFalse($dictionary->keyExists('asd'));
+	}
+
+	public function testAssertContains(): void
+	{
+		//arrange
+		$dictionary = new Dictionary('string', 'string');
+		$key = 'test';
+		$value = '123';
+
+		//act
+		$index = $dictionary->add($key, $value);
+		$keyValuePair = $dictionary->getAt($index);
+
+		//assert
+		$this->assertTrue($dictionary->contains($keyValuePair));
+		$this->assertFalse($dictionary->contains(new KeyValuePair($key . 'asd', '')));
+
+		$this->expectException(InvalidArgumentException::class);
+		$dictionary->contains(null);
+	}
+
+	public function testAssertIndexOfSingle(): void
+	{
+		//arrange
+		$dictionary = new Dictionary('string', 'string');
+		$key = 'test';
+		$value = '123';
+
+		//act
+		$index = $dictionary->add($key, $value);
+
+		//assert
+		$this->assertEquals($index, $dictionary->indexOf($key));
+	}
+
+	public function testAssertIndexOfMultiple(): void
+	{
+		//arrange
+		$dictionary = new Dictionary('string', 'int');
+		$keyPrefix = 'key';
+
+		//act
+		for($i = 0; $i < 10; $i++) {
+			$dictionary->add($keyPrefix . $i, $i);
+		}
+
+		//assert
+		for($i = 0; $i < 10; $i++) {
+			$this->assertEquals($i, $dictionary->indexOf($keyPrefix . $i));
+		}
+	}
+
+	public function testAssertToArraySingle(): void
+	{
+		//arrange
+		$dictionary = new Dictionary('string', 'string');
+		$key = 'key';
+		$value = 'value';
+
+		//act
+		$dictionary->add($key, $value);
+
+		//assert
+		$this->assertIsArray($dictionary->toArray());
+		$this->assertEquals([
+			'key' => 'value'
+		], $dictionary->toArray());
+	}
+
+	public function testAssertToArrayMultiple(): void
+	{
+		//arrange
+		$dictionary = new Dictionary('string', 'string');
+		$key = 'key';
+		$value = 'value';
+
+		//act
+		for($i = 0; $i < 10; $i++) {
+			$dictionary->add($key . $i, $value);
+		}
+
+		//assert
+		$this->assertIsArray($dictionary->toArray());
+
+		$array = [];
+		for($i = 0; $i < 10; $i++) {
+			$array[$key . $i] = $value;
+		}
+
+		$this->assertEquals($array, $dictionary->toArray());
 	}
 }

@@ -2,9 +2,9 @@
 
 namespace PHPeak\Exceptions;
 
-use \InvalidArgumentException as BaseInvalidArgumentException;
+use Exception;
 
-class InvalidArgumentException extends BaseInvalidArgumentException implements IException
+class InvalidArgumentException extends Exception
 {
 
 }

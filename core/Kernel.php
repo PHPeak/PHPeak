@@ -3,6 +3,7 @@
 namespace PHPeak;
 
 use PHPeak\Autoloader\ClassLoader;
+use PHPeak\Collections\Generic\Dictionary;
 
 class Kernel
 {
@@ -16,7 +17,10 @@ class Kernel
 
 	public function handleRequest(): string
 	{
+		$d = new Dictionary('string', 'string');
+		$d->add('test', 'test');
 
+		var_dump($d->toArray());
 
 		return '';
 	}

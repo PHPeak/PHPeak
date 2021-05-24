@@ -15,6 +15,8 @@
     - Repositories
     - Functional query building
     - Arguments
+- Random class
+    - Seeded?
 
 ## PSR
 - Logging
