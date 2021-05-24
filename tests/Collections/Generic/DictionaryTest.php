@@ -18,7 +18,7 @@ class DictionaryTest extends Testcase
 	public function testCanSupportScalar(): void
 	{
 		//arrange
-		$dictionary = new Dictionary('string', 'string');
+		$dictionary = new Dictionary('string', 'int');
 		$key = 'test';
 		$value = '123';
 
