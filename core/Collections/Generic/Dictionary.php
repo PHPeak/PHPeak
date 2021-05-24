@@ -158,4 +158,10 @@ final class Dictionary extends Generic implements ICollection, IDictionary
 		return array_merge([], ...array_map(fn($x) => [$x->key => $x->value], $this->items));
 	}
 
+	public function tryGet(mixed $key, mixed &$result): bool
+	{
+		// TODO: Implement tryGet() method.
+		throw new NotImplementedException();
+	}
+
 }

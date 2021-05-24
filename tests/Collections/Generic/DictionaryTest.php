@@ -2,6 +2,7 @@
 
 use PHPeak\Collections\Generic\Dictionary;
 use PHPeak\Collections\KeyValuePair;
+use PHPeak\Exceptions\ArgumentOutOfRangeException;
 use PHPeak\Exceptions\DuplicateKeyException;
 use PHPeak\Exceptions\InvalidArgumentException ;
 use PHPeak\Exceptions\InvalidKeyException;
@@ -108,7 +109,8 @@ class DictionaryTest extends Testcase
 
 		//assert
 		$this->assertInstanceOf(KeyValuePair::class, $dictionary->getAt($index));
-		$this->assertNull($dictionary->getAt(10));
+		$this->expectException(ArgumentOutOfRangeException::class);
+		$dictionary->getAt(10);
 	}
 
 	public function testGet(): void
