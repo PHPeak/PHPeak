@@ -3,15 +3,37 @@ name: PHP Tests
 on: [ pull_request ]
 
 jobs:
-  build:
+  tests:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+        - uses: actions/checkout@v2
 
-    - name: Run tests
-      run: php tests/phpunit.phar --bootstrap=tests/bootstrap.php --config=tests/phpunit.xml tests/
+        - name: Run tests
+          run: |
+            TESTS=$(php -dpcov.enabled=1 -dpcov.directory=./core tests/phpunit.phar --coverage-text --config=tests/phpunit.xml tests/)
+            EXIT_CODE=$?
+            SUMMARY=$(echo "$TESTS" | grep "Summary" -A3)
+            METHOD_COVERAGE=$(echo "$SUMMARY" | grep "Methods"  | grep -o '[^ ]*%' | sed 's/%//')
+            METHOD_COVERAGE=$(awk "BEGIN { rounded = sprintf(\"%.0f\", $METHOD_COVERAGE); print rounded }")
+            LINES_COVERAGE=$(echo "$SUMMARY" | grep "Lines" | grep -o '[^ ]*%' | sed 's/%//')
+            LINES_COVERAGE=$(awk "BEGIN { rounded = sprintf(\"%.0f\", $LINES_COVERAGE); print rounded }")
+
+            if [ "$EXIT_CODE" -ne 0 ]; then
+            FINAL_EXIT_CODE=2
+            elif [ "$MIN_CODE_COVERAGE" -ge "$LINES_COVERAGE" ] || [ "$MIN_CODE_COVERAGE" -ge "$METHOD_COVERAGE" ]; then
+            FINAL_EXIT_CODE=1
+            else
+            FINAL_EXIT_CODE=0
+            fi
+
+            exit $FINAL_EXIT_CODE
+          env:
+              MIN_CODE_COVERAGE: 80
+
+
+
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
