@@ -2,26 +2,32 @@
 
 namespace PHPeak\Collections\Generic;
 
+use Countable;
 use Iterator;
+use JetBrains\PhpStorm\Pure;
 use PHPeak\Collections\KeyValuePair;
 use PHPeak\Exceptions\InvalidArgumentException;
 
-abstract class Generic implements Iterator
+abstract class Generic implements Iterator, Countable
 {
 	private int $currentIndex = 0;
 	protected array $items = [];
 
 	/**
-	 * @var string A non-nullable type for the key, e.g. string, int, Dictionary
+	 * @var string A non-nullable type for the key, e.g. mixed, string, int, Dictionary::class
 	 */
 	private string $keyType;
 
 	/**
-	 * @var string A nullable type for the value, e.g. ?string, int, Dictionary
+	 * @var string A nullable type for the value, e.g. mixed, ?string, int[], ?Dictionary::class
 	 */
 	private string $valueType;
 	private bool $isValueNullable = false;
 
+	/**
+	 * @var bool Whether the value provided is an array
+	 */
+	private bool $isValueArray = false;
 
 	public function current()
 	{
@@ -46,6 +52,12 @@ abstract class Generic implements Iterator
 	public function rewind()
 	{
 		$this->currentIndex = 0;
+	}
+
+	#[Pure]
+	public function count(): int
+	{
+		return count($this->items);
 	}
 
 	protected function validateValueType($value): void
@@ -92,7 +104,13 @@ abstract class Generic implements Iterator
 			return;
 		}
 
-		$this->keyType = $keyType;
+		if(substr($keyType, -2, 2) === '[]') {
+			$this->isValueArray = true;
+			$this->keyType = substr($keyType, 0, strlen($keyType) - 2);
+		} else {
+			$this->keyType = $keyType;
+		}
+
 	}
 
 	private function throwInvalidException($value, $dicType): void
@@ -104,14 +122,15 @@ abstract class Generic implements Iterator
 
 		throw new InvalidArgumentException(sprintf("Expected value to be of type '%s' but got '%s'", $dicType, $type));
 	}
+
 	private function isValidType($variable, string $type): bool
 	{
-		if($type === 'any') {
+		if($type === 'mixed') {
 			$isValid = true;
+		} else if($this->isValueArray) {
+			$isValid = array_reduce($variable, fn($r, $x) => $r && $this->isScalar($x, $type) , true);
 		} else if(is_scalar($variable)) {
-			//all scalars have a function like is_string, is_int...
-			$isMethod = 'is_' . ucfirst($type);
-			$isValid = (function_exists($isMethod)) && $isMethod($variable);
+			$isValid = $this->isScalar($variable, $type);
 		} else if($type === 'array') {
 			$isValid =  is_array($variable);
 		} else {
@@ -119,6 +138,20 @@ abstract class Generic implements Iterator
 		}
 
 		return $isValid;
+	}
+
+	/**
+	 * Checks whether the variable has the scalar type provided in $type
+	 * All scalars have a function like is_string, is_int...
+	 *
+	 * @param $variable mixed The variable to check
+	 * @param string $type The
+	 * @return bool
+	 */
+	private function isScalar(mixed $variable, string $type): bool
+	{
+		$isMethod = 'is_' . ucfirst($type);
+		return (function_exists($isMethod)) && $isMethod($variable);
 	}
 
 }

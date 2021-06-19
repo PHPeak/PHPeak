@@ -2,6 +2,7 @@
 
 namespace PHPeak\Collections\Generic;
 
+use PHPeak\Callable\IBooleanCallable;
 use PHPeak\Collections\ICollection;
 use PHPeak\Collections\KeyValuePair;
 
@@ -13,12 +14,14 @@ use PHPeak\Collections\KeyValuePair;
  */
 final class Dictionary extends Generic implements IDictionary
 {
+	//TODO move to generic?
+	use GenericTrait;
 
 	/**
 	 * Dictionary constructor.
 	 *
-	 * @param string $keyType
-	 * @param string $valueType
+	 * @param string $keyType A non-nullable type to use for the key, e.g. any, string, int, Parameter::class
+	 * @param string $valueType A nullable type to use for the value, e.g. ?string, int[], ?Parameter::Class, any
 	 */
 	public function __construct(
 		string $keyType, //not nullable
@@ -43,11 +46,6 @@ final class Dictionary extends Generic implements IDictionary
 		// TODO: Implement remove() method.
 	}
 
-	public function removeAt(int $index): void
-	{
-		array_splice($this->items, $index, 1);
-	}
-
 	/**
 	 * Get the value with the specified key or null
 	 *
@@ -60,25 +58,29 @@ final class Dictionary extends Generic implements IDictionary
 		return array_shift($filtered) ?? null;
 	}
 
-	/**
-	 * Get the value at the specified index or null
-	 *
-	 * @param int $index
-	 * @return KeyValuePair|null
-	 */
-	public function getAt(int $index): ?KeyValuePair
+	public function keyExists(mixed $key): bool
 	{
-		return $this->items[$index] ?? null;
+		// TODO: Implement keyExists() method.
 	}
 
-	/**
-	 * @param callable $callback([$value], [$key], [$index])  Called on each item
-	 */
-	public function forEach(callable $callback) {
-		foreach($this as $index => $item) {
-			$callback($item->value, $item->key, $index);
-		}
+	public function contains(mixed $value): bool
+	{
+		// TODO: Implement contains() method.
 	}
 
+	public function sort(callable $fn = null): ICollection
+	{
+		// TODO: Implement sort() method.
+	}
+
+	public function clone(): self
+	{
+		return (clone $this);
+	}
+
+	public function indexOf(mixed $key): ?int
+	{
+		// TODO: Implement indexOf() method.
+	}
 
 }

@@ -2,7 +2,7 @@
 
 namespace PHPeak\Collections;
 
-class KeyValuePair
+class KeyValuePair implements IComparable
 {
 
 	public function __construct(public $key, public $value)
@@ -31,6 +31,11 @@ class KeyValuePair
 		$this->value = $value;
 
 		return $this;
+	}
+
+	public function compare(): mixed
+	{
+		return $this->value;
 	}
 
 }

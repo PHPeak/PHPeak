@@ -77,4 +77,8 @@ class DictionaryTest extends Testcase
 		$this->expectException(InvalidArgumentException::class);
 		$dictionary->add($key, $value);
 	}
+
+	///mixed test
+	//foreach test
+	//test for stable sort
 }

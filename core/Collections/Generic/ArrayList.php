@@ -2,7 +2,6 @@
 
 namespace PHPeak\Collections\Generic;
 
-use PHPeak\Collections\ICollection;
 use PHPeak\Collections\KeyValuePair;
 
 /**
@@ -13,6 +12,7 @@ use PHPeak\Collections\KeyValuePair;
  */
 final class ArrayList extends Generic // implements IList
 {
+	use GenericTrait;
 
 	/**
 	 * List constructor.
@@ -46,19 +46,7 @@ final class ArrayList extends Generic // implements IList
 
 	public function removeAt(int $index): void
 	{
-    unset($this->items[$index]);
-	}
-
-	/**
-	 * Get the value with the specified key or null
-	 *
-	 * @param mixed $key
-	 * @return KeyValuePair|null
-	 */
-	public function get(mixed $key): ?KeyValuePair
-	{
-		$filtered = array_filter($this->items, fn($x) => $x->key === $key);
-		return array_shift($filtered) ?? null;
+    	unset($this->items[$index]);
 	}
 
 	/**
@@ -70,15 +58,6 @@ final class ArrayList extends Generic // implements IList
 	public function getAt(int $index): ?KeyValuePair
 	{
 		return $this->items[$index] ?? null;
-	}
-
-	/**
-	 * @param callable $callback([$value], [$key], [$index])  Called on each item
-	 */
-	public function forEach(callable $callback) {
-		foreach($this as $index => $item) {
-			$callback($item->value, $item->key, $index);
-		}
 	}
 
 	public function contains($value)

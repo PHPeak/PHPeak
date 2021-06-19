@@ -2,9 +2,10 @@
 
 namespace PHPeak\Collections;
 
+use PHPeak\Callable\IBooleanCallable;
+
 interface ICollection
 {
-
 	/**
 	 * Remove the element with the given key
 	 *
@@ -20,7 +21,7 @@ interface ICollection
 	public function removeAt(int $index): void;
 
 	/**
-	 * Get the element at the given index
+	 * Get the value at the specified index or null
 	 *
 	 * @param int $index
 	 * @return mixed The value at the index or null
@@ -44,14 +45,39 @@ interface ICollection
 	 */
 	public function contains(mixed $value): bool;
 
-	public function sort(callable $fn = null): self;
+	/**
+	 * Sort the items in the current Collection
+	 *
+	 * @param callable|null $comparator If no comparator is supplied, the items will be sorted ascending based on their value
+	 * @return $this
+	 */
+	public function sort(callable $comparator = null): self;
 
-	public function find(callable $fn = null): mixed;
+	/**
+	 * Finds the first item that matches the expression supplied in the callback
+	 *
+	 * @param IBooleanCallable $callback
+	 * @return mixed
+	 */
+	public function find(IBooleanCallable $callback): mixed;
 
-	public function findAll(callable $fn = null): mixed;
+	/**
+	 * Finds all items that match the expression supplied in the callback
+	 *
+	 * @param IBooleanCallable $callback
+	 * @return array
+	 */
+	public function findAll(IBooleanCallable $callback): mixed;
 
-	public function copy(): self;
+	/**
+	 * @param callable $callback([$value], [$key], [$index])  Called on each item
+	 */
+	public function forEach(callable $callback): void;
 
-	//TODO findAll (callback)
-	//TODO copy
+	/**
+	 * Create a shallow copy of the Collection
+	 *
+	 * @return $this
+	 */
+	public function clone(): self;
 }
