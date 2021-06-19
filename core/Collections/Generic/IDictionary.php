@@ -17,4 +17,14 @@ interface IDictionary extends ICollection
 	 */
 	public function add(mixed $key, mixed $value): int;
 
+  /**
+   * Get the element with the given key
+   *
+   * @param mixed $key
+   * @return mixed The value at the index or null
+   */
+  public function get(mixed $key): mixed;
+
+  public function indexOf(mixed $key): ?int;
+
 }
