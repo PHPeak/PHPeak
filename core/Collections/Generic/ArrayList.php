@@ -2,6 +2,7 @@
 
 namespace PHPeak\Collections\Generic;
 
+use JetBrains\PhpStorm\Pure;
 use PHPeak\Collections\KeyValuePair;
 
 /**
@@ -12,17 +13,17 @@ use PHPeak\Collections\KeyValuePair;
  */
 final class ArrayList extends Generic // implements IList
 {
-	use GenericTrait;
+	use Traits\GenericTrait;
 
 	/**
 	 * List constructor.
 	 *
-	 * @param string $valueType
+	 * @param string $valueType A nullable type to use for the value, e.g. ?string, int[], ?Parameter::Class, mixed
 	 */
-	public function __construct(
-		string $valueType //nullable
+	#[Pure] public function __construct(
+		string $valueType
 	) {
-		$this->setValueType($valueType);
+		parent::__construct('int', $valueType);
 	}
 
 	public function add(mixed $value): int

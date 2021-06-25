@@ -4,7 +4,7 @@ namespace PHPeak\Sorting\Comparator;
 
 use PHPeak\Collections\IComparable;
 
-class ComparatorDescending implements IComparator
+class ComparatorAscending implements IComparator
 {
 
 	public function __invoke(mixed $a, mixed $b): int
@@ -22,8 +22,7 @@ class ComparatorDescending implements IComparator
 			return 0;
 		}
 
-
-		return ($a > $b) ? -1 : 1;
+		return ($a < $b) ? -1 : 1;
 	}
 
 }

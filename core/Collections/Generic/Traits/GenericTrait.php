@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPeak\Collections\Generic;
+namespace PHPeak\Collections\Generic\Traits;
 
 use PHPeak\Callable\IBooleanCallable;
 
@@ -10,16 +10,16 @@ trait GenericTrait
 	/**
 	 * Loop over each item in the Collection.
 	 *
-	 * @param callable $callback([$value] [$index]) Called on each item
-	 * 												Optionally the callback may return true/false whether the foreach should continue to run
-	 * 												If false is supplied the loop will stop. If anything else is supplied the loop will continue
+	 * @param callable $callback([$value], [$index]) Called on each item
+	 * 												Optionally the callback may return true/false whether the foreach should break
+	 * 												If true is supplied the loop will stop. If anything else is supplied the loop will continue
 	 */
 	public function forEach(callable $callback): void
 	{
 		foreach($this as $index => $item) {
-			$continue = $callback($item, $index);
+			$break = $callback($item, $index);
 
-			if($continue === false) {
+			if($break === true) {
 				break;
 			}
 		}
@@ -57,10 +57,13 @@ trait GenericTrait
 		$returnValue = null;
 
 		$this->forEach(function($item) use($callback, &$returnValue) {
-			if($callback($item)) {
+			$isItem = $callback($item);
+
+			if($isItem) {
 				$returnValue = $item;
-				return false;
 			}
+
+			return $isItem;
 		});
 
 		return $returnValue;
@@ -83,5 +86,17 @@ trait GenericTrait
 		});
 
 		return $returnValue;
+	}
+
+	/**
+	 * Clears all the entries in the Collection
+	 *
+	 * @return $this
+	 */
+	public function clear(): self
+	{
+		$this->items = [];
+
+		return $this;
 	}
 }

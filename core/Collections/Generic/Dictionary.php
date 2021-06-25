@@ -2,9 +2,13 @@
 
 namespace PHPeak\Collections\Generic;
 
+use JetBrains\PhpStorm\Pure;
 use PHPeak\Callable\IBooleanCallable;
 use PHPeak\Collections\ICollection;
 use PHPeak\Collections\KeyValuePair;
+use PHPeak\Exceptions\DuplicateKeyException;
+use PHPeak\Sorting\Comparator\IComparator;
+use PHPeak\Sorting\Quicksort;
 
 /**
  * Class Dictionary
@@ -15,35 +19,35 @@ use PHPeak\Collections\KeyValuePair;
 final class Dictionary extends Generic implements IDictionary
 {
 	//TODO move to generic?
-	use GenericTrait;
+	use Traits\GenericTrait;
 
 	/**
-	 * Dictionary constructor.
-	 *
-	 * @param string $keyType A non-nullable type to use for the key, e.g. any, string, int, Parameter::class
-	 * @param string $valueType A nullable type to use for the value, e.g. ?string, int[], ?Parameter::Class, any
+	 * {@inheritdoc}
 	 */
-	public function __construct(
-		string $keyType, //not nullable
-		string $valueType //nullable
-	) {
-		$this->setKeyType($keyType);
-		$this->setValueType($valueType);
-	}
-
 	public function add(mixed $key, mixed $value): int
 	{
 		$keyValuePair = new KeyValuePair($key, $value);
 
 		$this->validateKeyValuePair($keyValuePair);
+
+		if($this->keyExists($key)) {
+			throw new DuplicateKeyException($key);
+		}
+
 		$this->items[] = $keyValuePair;
 
 		return count($this->items) - 1;
 	}
 
-	public function remove($key): void
+	public function remove(mixed $key): void
 	{
-		// TODO: Implement remove() method.
+		$this->validateKeyType($key);
+
+		$index = $this->indexOf($key);
+
+		if($index !== -1) {
+			unset($this->items[$key]);
+		}
 	}
 
 	/**
@@ -58,29 +62,94 @@ final class Dictionary extends Generic implements IDictionary
 		return array_shift($filtered) ?? null;
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function keyExists(mixed $key): bool
 	{
-		// TODO: Implement keyExists() method.
+		$existingItem = $this->findByProperty('key', $key);
+
+		return $existingItem !== null;
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function contains(mixed $value): bool
 	{
-		// TODO: Implement contains() method.
+		$existingItem = $this->findByProperty('value', $value);
+
+		return $existingItem !== null;
 	}
 
-	public function sort(callable $fn = null): ICollection
+	/**
+	 * {@inheritdoc}
+	 */
+	public function sort(?IComparator $comparator = null): ICollection
 	{
-		// TODO: Implement sort() method.
+		$this->items = $this->sortingAlgorithm::sort($this->items, $comparator);
+
+		return $this;
 	}
 
-	public function clone(): self
+	/**
+	 * {@inheritdoc}
+	 */
+	public function clone(): Dictionary
 	{
 		return (clone $this);
 	}
 
-	public function indexOf(mixed $key): ?int
+	/**
+	 * {@inheritdoc}
+	 */
+	public function indexOf(mixed $key): int
 	{
-		// TODO: Implement indexOf() method.
+		$index = -1;
+
+		$this->forEach(function($item, $i) use($key, &$index) {
+			$isItem = $item->key === $key;
+
+			if($isItem) {
+				$index = $i;
+			}
+
+			return $isItem;
+		});
+
+		return $index;
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
+	public function toArray(): array
+	{
+		$result = [];
+		$this->forEach(function($x) use(&$result) {
+			$result[$x->key] = $x->value;
+		});
+
+		return $result;
+	}
+
+	/**
+	 * Find an item using it's property, e.g. for a KeyValuePair that would be key or value
+	 *
+	 * @param string $property
+	 * @param mixed $value
+	 * @return KeyValuePair|null
+	 */
+	private function findByProperty(string $property, mixed $value): ?KeyValuePair
+	{
+		return $this->find(new class($property, $value) implements IBooleanCallable {
+
+			public function __construct(private $property, private $value) {}
+
+			public function __invoke(mixed $item): bool
+			{
+				return $item->{$this->property} === $this->value;
+			}
+		});
+	}
 }

@@ -9,6 +9,4 @@ ARG DEBIAN_FRONTEND=noninteractive
 #    && apt-get -y --no-install-recommends install  php8-mysql php8-redis php8-xdebug php8-mongodb php8-yaml php8-pcov \
 #    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
-RUN pecl install pcov &&  echo "extension=pcov.so" >> /usr/local/etc/php/php.ini-development
-
-
+RUN pecl install pcov && echo "extension=pcov.so" >> /usr/local/etc/php/php.ini-development && pecl install xdebug

@@ -25,6 +25,12 @@ interface IDictionary extends ICollection
    */
   public function get(mixed $key): mixed;
 
-  public function indexOf(mixed $key): ?int;
+	/**
+	 * Find the index of an element by its key
+	 *
+	 * @param mixed $key The key to search for
+	 * @return int The index of the element if found, otherwise -1
+	 */
+  public function indexOf(mixed $key): int;
 
 }

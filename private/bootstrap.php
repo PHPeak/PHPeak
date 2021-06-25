@@ -7,6 +7,7 @@ if(empty($_SERVER['DOCUMENT_ROOT'])) {
 }
 
 require_once(__DIR__ . '/../core/Autoloader/ClassLoader.php');
+require_once(__DIR__ . '/methods.php');
 
 ClassLoader::registerAutoloader();
 

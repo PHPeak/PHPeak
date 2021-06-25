@@ -3,6 +3,7 @@
 namespace PHPeak\Collections;
 
 use PHPeak\Callable\IBooleanCallable;
+use PHPeak\Sorting\Comparator\IComparator;
 
 interface ICollection
 {
@@ -38,7 +39,7 @@ interface ICollection
 
 	/**
 	 * Checks whether the given value exists
-	 * NOTE: If an object is given to compare, the given value has to point to the same object instance
+	 * NOTE: If an object is given to look for, the given value has to point to the same object instance
 	 *
 	 * @param mixed $value
 	 * @return bool
@@ -48,10 +49,10 @@ interface ICollection
 	/**
 	 * Sort the items in the current Collection
 	 *
-	 * @param callable|null $comparator If no comparator is supplied, the items will be sorted ascending based on their value
+	 * @param IComparator|null $comparator If no comparator is supplied, the items will be sorted ascending based on their value
 	 * @return $this
 	 */
-	public function sort(callable $comparator = null): self;
+	public function sort(?IComparator $comparator = null): self;
 
 	/**
 	 * Finds the first item that matches the expression supplied in the callback
@@ -80,4 +81,24 @@ interface ICollection
 	 * @return $this
 	 */
 	public function clone(): self;
+
+	/**
+	 * Convert the Collection to an array
+	 *
+	 * @return array
+	 */
+	public function toArray(): array;
+
+	/**
+	 * Clears all the entries in the Collection
+	 *
+	 * @return $this
+	 */
+	public function clear(): self;
+
+	/**
+	 * Create a new Collection instance from an array
+	 *
+	 */
+	//public static function fromArray(): self;
 }

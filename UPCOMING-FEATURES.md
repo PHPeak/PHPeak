@@ -5,6 +5,7 @@
 - Responses (JSONResponse/TextResponse/StreamResponse)
 - Controllers
 - Profiler
+    - Stopwatch
 - HTTP Client
 - PHPUnit
 - FixCS

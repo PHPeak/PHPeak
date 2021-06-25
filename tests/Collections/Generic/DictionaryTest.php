@@ -78,7 +78,69 @@ class DictionaryTest extends Testcase
 		$dictionary->add($key, $value);
 	}
 
-	///mixed test
+	public function testSupportForMixedType(): void
+	{
+		$this->expectNotToPerformAssertions();;
+
+		//arrange
+		$dictionary = new Dictionary('mixed', 'mixed');
+		$keys = ['test', 123, [123], new Dictionary('string', 'string')];
+
+		//act
+		foreach($keys as $key) {
+			$dictionary->add($key, $key);
+		}
+	}
+
+	public function testSupportForArrayType(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		//arrange
+		$dictionary = new Dictionary('string', 'string[]');
+		$key = 'test';
+		$value = ['test'];
+
+		//act
+		$dictionary->add($key, $value);
+	}
+
+	public function testSupportForArrayTypeMixed(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		//arrange
+		$dictionary = new Dictionary('string', 'mixed[]');
+		$key = 'test';
+		$value = ['test', 123, new Dictionary('string', 'string')];
+
+		//act
+		$dictionary->add($key, $value);
+	}
+
+	public function testSupportForInvalidTypeInArray(): void
+	{
+		//arrange
+		$dictionary = new Dictionary('string', 'string[]');
+		$key = 'test';
+		$value = ['test', 123];
+
+		//act
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionObject(new InvalidArgumentException("Expected value to be of type 'string[]' but got 'integer'"));
+		$dictionary->add($key, $value);
+	}
+
+	public function testSorting(): void
+	{
+
+	}
+
+	public function testIsSortingStable(): void
+	{
+
+	}
+
 	//foreach test
 	//test for stable sort
 }
