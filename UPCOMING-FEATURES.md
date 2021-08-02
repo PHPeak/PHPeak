@@ -16,6 +16,7 @@
     - Repositories
     - Functional query building
     - Arguments
+- Queues
 
 ## PSR
 - Logging
