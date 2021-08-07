@@ -17,6 +17,7 @@
     - Functional query building
     - Arguments
 - Queues
+- Pipes
 
 ## PSR
 - Logging
