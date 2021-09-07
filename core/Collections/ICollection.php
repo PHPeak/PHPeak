@@ -99,6 +99,8 @@ interface ICollection
 	/**
 	 * Create a new Collection instance from an array
 	 *
+	 * @param array $array The array to import
+	 * @return ICollection
 	 */
-	//public static function fromArray(): self;
+	public static function fromArray(array $array): self;
 }

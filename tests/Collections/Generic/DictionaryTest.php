@@ -131,13 +131,26 @@ class DictionaryTest extends Testcase
 		$dictionary->add($key, $value);
 	}
 
-	public function testSorting(): void
+	public function testSortingAscending(): void
 	{
+		//arrange
+		$initial = [1, 4, 5, 3, 2];
+		$expected = [1, 2, 3, 4, 5];
+		//act
+
+
 
 	}
 
-	public function testIsSortingStable(): void
+	public function testSortingDescending(): void
 	{
+		//arrange
+		$initial = [1, 4, 5, 3, 2];
+		$expected = [1, 2, 3, 4, 5];
+//		$dictionary = Dictionary::fromArray()
+		//act
+
+
 
 	}
 

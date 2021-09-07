@@ -17,13 +17,13 @@ interface IDictionary extends ICollection
 	 */
 	public function add(mixed $key, mixed $value): int;
 
-  /**
-   * Get the element with the given key
-   *
-   * @param mixed $key
-   * @return mixed The value at the index or null
-   */
-  public function get(mixed $key): mixed;
+	/**
+	* Get the element with the given key
+	*
+	* @param mixed $key
+	* @return mixed The value at the index or null
+	*/
+	public function get(mixed $key): mixed;
 
 	/**
 	 * Find the index of an element by its key
@@ -31,6 +31,5 @@ interface IDictionary extends ICollection
 	 * @param mixed $key The key to search for
 	 * @return int The index of the element if found, otherwise -1
 	 */
-  public function indexOf(mixed $key): int;
-
+	public function indexOf(mixed $key): int;
 }

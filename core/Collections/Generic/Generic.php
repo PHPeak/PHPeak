@@ -8,6 +8,8 @@ use JetBrains\PhpStorm\Pure;
 use PHPeak\Collections\KeyValuePair;
 use PHPeak\Exceptions\InvalidArgumentException;
 use PHPeak\Sorting\ISort;
+use PHPeak\TypeHinting\AbstractValueType;
+use PHPeak\TypeHinting\ValueTypeImmutable;
 
 abstract class Generic implements Iterator, Countable
 {
@@ -28,15 +30,9 @@ abstract class Generic implements Iterator, Countable
 	 */
 	private string $keyType;
 	/**
-	 * @var string A nullable type for the value, e.g. mixed, ?string, int[], ?Dictionary::class
+	 * @var AbstractValueType A nullable type for the value, e.g. mixed, ?string, int[], ?Dictionary::class
 	 */
-	private string $valueType;
-	private bool $isValueNullable = false;
-
-	/**
-	 * @var bool Whether the value provided is an array
-	 */
-	private bool $isValueAnArray = false;
+	private AbstractValueType $valueType;
 
 	/**
 	 * Dictionary constructor.
@@ -98,7 +94,7 @@ abstract class Generic implements Iterator, Countable
 		if($type === self::KEY) {
 			return $this->keyType;
 		} else if($type === self::VALUE) {
-			return $this->valueType . ($this->isValueAnArray ? '[]' : '');
+			return $this->valueType->getType() . ($this->valueType->isArray() ? '[]' : '');
 		}
 
 		throw new InvalidArgumentException('Unknown type');
@@ -111,7 +107,7 @@ abstract class Generic implements Iterator, Countable
 	 */
 	protected function validateValueType(mixed $value): void
 	{
-		if((!$this->isValueNullable && $value === null) || ($value !== null && !$this->isValidType($value, $this->valueType, self::VALUE))) {
+		if((!$this->valueType->isNullable() && $value === null) || ($value !== null && !$this->isValidType($value, $this->valueType->getType(), self::VALUE))) {
 			$this->throwInvalidException($value, $this->getTypeAsString(self::VALUE));
 		}
 	}
@@ -140,10 +136,7 @@ abstract class Generic implements Iterator, Countable
 			return;
 		}
 
-		$type = $this->determineType($valueType);
-		$this->isValueNullable = $type->isNullable;
-		$this->isValueAnArray = $type->isArray;
-		$this->valueType = $type->type;
+		$this->valueType = $this->determineType($valueType);
 	}
 
 	protected function setKeyType($keyType): void
@@ -153,16 +146,13 @@ abstract class Generic implements Iterator, Countable
 		}
 
 		$type = $this->determineType($keyType);
-		if($type->isNullable) {
+		if($type->isNullable()) {
 			throw new InvalidArgumentException("Key may not be nullable");
-		} else if($type->isArray) {
+		} else if($type->isArray()) {
 			throw new InvalidArgumentException("Key may not be an array");
 		}
 
-		$this->keyType = $type->type;
-
-		//TODO generic support with type hinting?
-		//TODO array support
+		$this->keyType = $type->getType();
 	}
 
 	private function throwInvalidException($value, $dicType): void
@@ -189,7 +179,7 @@ abstract class Generic implements Iterator, Countable
 	{
 		if($type === 'mixed') {
 			$isValid = true;
-		} else if($propertyToCheck === self::VALUE && !$isRecursive && $this->isValueAnArray) {
+		} else if($propertyToCheck === self::VALUE && !$isRecursive && $this->valueType->isArray()) {
 			$isValid = is_array($variable);
 
 			if($isValid) {
@@ -227,23 +217,10 @@ abstract class Generic implements Iterator, Countable
 
 	/**
 	 * @param string $valueType
-	 * @return object An object containing the below properties
-	 * 				  * @property bool $isNullable whether the type is nullable
-	 *				  * @property bool $isArray whether the type is an array
-	 *                * @property string $type The type without the above modifiers
+	 * @return AbstractValueType
 	 */
-	private function determineType(string $valueType): object
+	private function determineType(string $valueType): AbstractValueType
 	{
-		$returnValue = new class {
-			public bool $isNullable;
-			public bool $isArray;
-			public string $type;
-		};
-
-		$returnValue->isNullable = str_starts_with($valueType, '?');
-		$returnValue->isArray = str_ends_with($valueType, '[]');
-		$returnValue->type = ltrim(rtrim($valueType, '[]'), '?');
-
-		return $returnValue;
+		return new ValueTypeImmutable($valueType);
 	}
 }

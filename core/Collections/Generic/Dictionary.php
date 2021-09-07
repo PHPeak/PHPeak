@@ -2,13 +2,12 @@
 
 namespace PHPeak\Collections\Generic;
 
-use JetBrains\PhpStorm\Pure;
 use PHPeak\Callable\IBooleanCallable;
 use PHPeak\Collections\ICollection;
 use PHPeak\Collections\KeyValuePair;
 use PHPeak\Exceptions\DuplicateKeyException;
+use PHPeak\Services\TypeService;
 use PHPeak\Sorting\Comparator\IComparator;
-use PHPeak\Sorting\Quicksort;
 
 /**
  * Class Dictionary
@@ -152,4 +151,25 @@ final class Dictionary extends Generic implements IDictionary
 			}
 		});
 	}
+
+	/**
+	 * {@inheritdoc}
+	 * @throws DuplicateKeyException
+	 */
+	public static function fromArray(array $array, ?ICollection $dictionary = null): self
+	{
+		$keyType = null;
+		$valueType = null;
+
+		dump(TypeService::guessType($array));
+
+//		$dictionary = new Dictionary();
+//
+//		foreach($array as $key => $value) {
+//			$this->add()
+//		}
+
+		return new Dictionary('string', 'string');
+	}
+
 }

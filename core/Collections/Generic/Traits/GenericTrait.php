@@ -3,6 +3,7 @@
 namespace PHPeak\Collections\Generic\Traits;
 
 use PHPeak\Callable\IBooleanCallable;
+use PHPeak\Collections\ICollection;
 
 trait GenericTrait
 {
@@ -91,12 +92,13 @@ trait GenericTrait
 	/**
 	 * Clears all the entries in the Collection
 	 *
-	 * @return $this
+	 * @return ICollection The instance of the object the method was called on
 	 */
-	public function clear(): self
+	public function clear(): ICollection
 	{
 		$this->items = [];
 
+		//FIXME
 		return $this;
 	}
 }
