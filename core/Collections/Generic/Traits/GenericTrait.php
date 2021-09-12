@@ -4,6 +4,7 @@ namespace PHPeak\Collections\Generic\Traits;
 
 use PHPeak\Callable\IBooleanCallable;
 use PHPeak\Collections\ICollection;
+use PHPeak\Collections\IForeachCallback;
 
 trait GenericTrait
 {
@@ -11,11 +12,11 @@ trait GenericTrait
 	/**
 	 * Loop over each item in the Collection.
 	 *
-	 * @param callable $callback([$value], [$index]) Called on each item
+	 * @param IForeachCallback|callable $callback([$value], [$index]) Called on each item
 	 * 												Optionally the callback may return true/false whether the foreach should break
 	 * 												If true is supplied the loop will stop. If anything else is supplied the loop will continue
 	 */
-	public function forEach(callable $callback): void
+	public function forEach(IForeachCallback|callable $callback): void
 	{
 		foreach($this as $index => $item) {
 			$break = $callback($item, $index);

@@ -4,6 +4,7 @@ namespace PHPeak\Collections\Generic;
 
 use PHPeak\Callable\IBooleanCallable;
 use PHPeak\Collections\ICollection;
+use PHPeak\Collections\IForeachCallback;
 use PHPeak\Collections\KeyValuePair;
 use PHPeak\Exceptions\DuplicateKeyException;
 use PHPeak\Services\TypeService;
@@ -154,22 +155,42 @@ final class Dictionary extends Generic implements IDictionary
 
 	/**
 	 * {@inheritdoc}
-	 * @throws DuplicateKeyException
 	 */
-	public static function fromArray(array $array, ?ICollection $dictionary = null): self
+	public static function fromArray(array $array): self
 	{
-		$keyType = null;
-		$valueType = null;
+		$arrayType = TypeService::guessArrayType($array);
+		$dictionary = new self($arrayType->getKeyType(), $arrayType->getValueType());
 
-		dump(TypeService::guessType($array));
+		foreach($array as $key=>$value) {
+			/** @noinspection PhpUnhandledExceptionInspection Arrays can't have duplicate keys */
+			$dictionary->add($key, $value);
+		}
 
-//		$dictionary = new Dictionary();
-//
-//		foreach($array as $key => $value) {
-//			$this->add()
-//		}
+		return $dictionary;
+	}
 
-		return new Dictionary('string', 'string');
+	/**
+	 * {@inheritdoc}
+	 */
+	public function merge(ICollection $collection): ICollection
+	{
+		$collection->forEach(new class($this) implements IForeachCallback {
+			public function __construct(private Dictionary $dictionary) {}
+
+			public function __invoke(mixed $value, mixed $index): void
+			{
+				$key = $index;
+
+				if($value instanceof KeyValuePair) {
+					$key = $value->getKey();
+					$value = $value->getValue();
+				}
+
+				$this->dictionary->add($key, $value);
+			}
+		});
+
+		return $this;
 	}
 
 }

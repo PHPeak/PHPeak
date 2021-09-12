@@ -89,21 +89,6 @@ class TypeService
 		return rtrim($type, Type::ARRAY_SUFFIX) . Type::ARRAY_SUFFIX;
 	}
 
-	private static function getArrayType(array $array, ?string $compareToType = null): string
-	{
-		$type = new ValueType($compareToType);
-
-		foreach($array as $value) {
-			$valueType = self::getType($type);
-
-			if($valueType === Type::NULL) {
-				$type->setIsNullable(true);
-			}
-
-		}
-
-	}
-
 	/**
 	 * @param mixed $var
 	 * @param string|null $compareToType Compare the $var's type to this type if defined
@@ -111,7 +96,7 @@ class TypeService
 	 * 									 If $var is an int, and $compareToType is 'string', this method will return mixed
 	 * 									 If $var is a string and $compareToType is 'string', this method will return 'string'
 	 * 									 If $var is null and $compareToType is 'string', this method will return '?string'
-	 * @return string
+	 * @return ValueType
 	 */
 	private static function getType(mixed $var, ?string $compareToType = null): ValueType
 	{
@@ -121,7 +106,9 @@ class TypeService
 			$type = self::makeTypeNullable($type);
 		}
 
-//		if($)
+		if($type === Type::ARRAY) {
+			$type = self::makeTypeArray('mixed');
+		}
 
 		if($compareToType !== null && $compareToType !== $type) {
 			$type = 'mixed';

@@ -71,9 +71,9 @@ interface ICollection
 	public function findAll(IBooleanCallable $callback): mixed;
 
 	/**
-	 * @param callable $callback([$value], [$key], [$index])  Called on each item
+	 * @param IForeachCallback|callable $callback([$value], [$key], [$index])  Called on each item
 	 */
-	public function forEach(callable $callback): void;
+	public function forEach(IForeachCallback|callable $callback): void;
 
 	/**
 	 * Create a shallow copy of the Collection
@@ -103,4 +103,12 @@ interface ICollection
 	 * @return ICollection
 	 */
 	public static function fromArray(array $array): self;
+
+	/**
+	 * Merge the Collection into the current instance. The instance this method is executed on is leading.
+	 *
+	 * @param ICollection $collection The collection to merge into the current instance
+	 * @return ICollection
+	 */
+	public function merge(ICollection $collection): self;
 }

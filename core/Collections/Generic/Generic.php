@@ -40,7 +40,6 @@ abstract class Generic implements Iterator, Countable
 	 * @param string $keyType A non-nullable, non-array type to use for the key, e.g. mixed, string, int, Parameter::class
 	 * @param string $valueType A nullable type to use for the value, e.g. ?string, int[], ?Parameter::Class, mixed
 	 */
-	#[Pure]
 	public function __construct(
 		string $keyType,
 		string $valueType
@@ -49,6 +48,7 @@ abstract class Generic implements Iterator, Countable
 		$this->setValueType($valueType);
 	}
 
+	#[Pure]
 	public function current()
 	{
 		return $this->items[$this->currentIndex];
@@ -59,6 +59,7 @@ abstract class Generic implements Iterator, Countable
 		$this->currentIndex++;
 	}
 
+	#[Pure]
 	public function key(): int
 	{
 		return $this->currentIndex;

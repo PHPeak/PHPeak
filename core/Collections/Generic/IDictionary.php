@@ -3,6 +3,7 @@
 namespace PHPeak\Collections\Generic;
 
 use PHPeak\Collections\ICollection;
+use PHPeak\Exceptions\DuplicateKeyException;
 
 interface IDictionary extends ICollection
 {
@@ -13,6 +14,7 @@ interface IDictionary extends ICollection
 	 *
 	 * @param mixed $key
 	 * @param mixed $value
+	 * @throws DuplicateKeyException
 	 * @return int The index of the newly added element
 	 */
 	public function add(mixed $key, mixed $value): int;
