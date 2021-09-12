@@ -18,6 +18,8 @@
     - Arguments
 - Queues
 - Pipes
+- Observables
+- Subscribers
 
 ## PSR
 - Logging
