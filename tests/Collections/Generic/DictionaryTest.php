@@ -131,13 +131,61 @@ class DictionaryTest extends Testcase
 		$dictionary->add($key, $value);
 	}
 
+	public function testMergeAllValidValues(): void
+	{
+		//arrange
+		$dictionary = new Dictionary('int', 'int');
+		$dictionaryToMerge = $dictionary->clone();
+		$originalValues = range(0, 10);
+		$valuesToMerge = range(11, 20);
+
+		foreach($originalValues as $key=>$value) {
+			$dictionary->add($key, $value);
+		}
+
+		//act
+		foreach($valuesToMerge as $key=>$value) {
+			$dictionaryToMerge->add($key+count($originalValues), $value);
+		}
+
+		$dictionary->merge($dictionaryToMerge);
+
+		//assert
+		$this->assertEquals([...$originalValues, ...$valuesToMerge], $dictionary->toArray());
+	}
+
+	public function testToArrayString(): void
+	{
+		//TODO: implement this method
+		$this->expectNotToPerformAssertions();
+	}
+
+	public function testToArrayObject(): void
+	{
+		//TODO: implement this method
+		$this->expectNotToPerformAssertions();
+	}
+
+	public function testToArrayIntArray(): void
+	{
+		//TODO: implement this method
+		$this->expectNotToPerformAssertions();
+	}
+
+	public function testToArrayNullableBool(): void
+	{
+		//TODO: implement this method
+		$this->expectNotToPerformAssertions();
+	}
+
 	public function testSortingAscending(): void
 	{
 		//arrange
 		$initial = [1, 4, 5, 3, 2];
 		$expected = [1, 2, 3, 4, 5];
 		//act
-
+		//TODO: implement this method
+		$this->expectNotToPerformAssertions();
 
 
 	}
@@ -150,7 +198,8 @@ class DictionaryTest extends Testcase
 //		$dictionary = Dictionary::fromArray()
 		//act
 
-
+		//TODO: implement this method
+		$this->expectNotToPerformAssertions();
 
 	}
 

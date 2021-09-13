@@ -35,11 +35,11 @@ abstract class AbstractValueType
 
 		$this->isNullable = str_starts_with($valueType, '?');
 		$this->isArray = str_ends_with($valueType, '[]');
-		$this->type = ltrim(rtrim($valueType, '[]'), '?');
+		$type = ltrim(rtrim($valueType, '[]'), '?');
 
-		if(in_array($this->type, Type::CONVERT_TYPES)) {
-			$this->type = TYPE::CONVERT_TYPES[$this->type];
-		}
+		//convert the type if needed, e.g. => int to integer
+		//if no conversion is needed, default to the given Type
+		$this->type = Type::CONVERT_TYPES[$type] ?? $type;
 	}
 
 	/**
