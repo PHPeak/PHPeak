@@ -1,6 +1,7 @@
 # Upcoming features
 # Core
 - Cache
+  - Redis
 - Kernel
 - Responses (JSONResponse/TextResponse/StreamResponse)
 - Controllers
@@ -11,10 +12,10 @@
 - CLI Support
 - ENV support
 - ORM
-    - Entities
-    - Repositories
-    - Functional query building
-    - Arguments
+  - Entities
+  - Repositories
+  - Functional query building
+  - Arguments
 
 ## PSR
 - Logging
@@ -24,12 +25,18 @@
 
 # Should have
 - User module
-- 2FA module independent of above user module 
-- QRCode library, mostly for use with 2FA
+- 2FA module independent of above user module
 - Localization (i18n)
 - Automated class generation
+- Full annotation support
 - Service workers
   - With that custom outage pages
 
 # Could have
-- Annotation support
+- Typed arrays
+- QRCode library, mostly for use with 2FA
+- Tracking 
+  - GTM support
+  - Tracking fingerprinting
+  - Tracking evading
+    - random endpoint to send tracking data to
